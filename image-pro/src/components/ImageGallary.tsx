@@ -1,6 +1,8 @@
 import React from 'react'
+import useFirestore from '../hooks/useFirestore'
 
 function ImageGallary() {
+    const {docs} = useFirestore('images')
     return (
         <div className='grid md:grid-cols-3 justify-center gap-4 mt-10'>
             <div className="card card-compact bg-base-100 w-96 shadow-xl">
