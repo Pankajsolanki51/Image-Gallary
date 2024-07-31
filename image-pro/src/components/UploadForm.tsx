@@ -3,7 +3,7 @@ import useStorage from '../hooks/useStorage';
 
 function UploadForm() {
     const [selected, setSelected] = useState<File | null>(null);
-    const { stratUpload , progress} = useStorage();
+    const { stratUpload, progress } = useStorage();
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setSelected(e.target.files[0]);
@@ -15,8 +15,8 @@ function UploadForm() {
         if (selected) {
             //start uplaod teh image
             stratUpload(selected)
-            
-            
+
+
 
         }
         setSelected(null)
@@ -25,8 +25,17 @@ function UploadForm() {
         <div className='text-center mt-10'>
             <form onSubmit={handleSubmit} className='flex items-center flex-col gap-8'>
                 <input onChange={handleFileChange} type="file" className="file-input file-input-bordered w-full max-w-xs" />
-                <button type='submit' className={`btn btn-primary gap-3 ${Boolean(progress) && 'loading'}`} 
-                disabled={!selected}>Upload <span>🚀</span></button>
+                <button style={{
+                    padding: '10px 20px',
+                    border: 'none',
+                    borderRadius: '5px',
+                    fontSize: '16px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s ease',
+                    backgroundColor: '#007bff', // primary button color
+                    color: '#fff' // text color
+                }} type='submit' className={`btn btn-primary gap-3 ${Boolean(progress) && 'loading'}`}
+                    disabled={!selected}>Upload <span>🚀</span></button>
             </form>
         </div>
     )

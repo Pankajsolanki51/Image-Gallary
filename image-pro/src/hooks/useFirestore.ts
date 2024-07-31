@@ -1,10 +1,9 @@
 
-import { collection } from "firebase/firestore";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../Firebase/Config";
 
-type Image{
+type Image = {
     createdAt: Date,
     userEmail: string,
     imageUrl: string
@@ -14,23 +13,30 @@ const useFirestore = (collectionName: string) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        let unsubscribe: () => void
         const getData = async () => {
             try {
 
                 const q = query(collection(db, collectionName),orderBy("createdAt","desc"));
-                const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                    const images : Image[]= [];
+                unsubscribe = onSnapshot(q, (querySnapshot) => {
+                    const images : Image[] = [];
                     querySnapshot.forEach((doc) => {
-                        images.push(doc.data().name);
+                        const  imageUrl = doc.data().imageUrl
+                        const  createdAt = doc.data().createdAt.toDate();
+                        const  userEmail = doc.data().userEmail
+                        images.push({imageUrl,createdAt,userEmail})
                     });
                     setDocs(images)
+                    setIsLoading(false)
                 });
 
             } catch (error) {
                 error.message
+                setIsLoading(false)
             }
         }
-        getData()
+        getData();
+        return ()=> unsubscribe && unsubscribe();
     }, [collectionName])
 
     return {
